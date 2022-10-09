@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+
+  <link rel="stylesheet" href="./css/style.css">
+</head>
+
+<body>
+  <div class="container">
+    <div class="user__container" user__container>
+      <h1>Welcome Back</h1>
+      <button class="btn" Btn__LogOut>Log out</button>
+      <a href="./index.html" class="btn">Creat New Account</a>
+    </div>
+
+    <div class="form__Container active" form__Container>
+      <header>
+        <h2>Login</h2>
+      </header>
+      <form action="#" class="form">
+        <div class="error__text__wrapper" err__text__wrapper>
+          <p err__text></p>
+        </div>
+        <input class="input" type="email" placeholder="example@gmail.com" required Email__Input>
+        <input class="input" type="password" placeholder="password" required Password__input>
+        <button type="button" class="btn" Btn__Submit>Submit</button>
+        <p>Don't have an account? <a href="./index.html">Sign up</a></p>
+      </form>
+    </div>
+  </div>
+</body>
+<script>
+  const Email__Input = document.querySelector("[Email__Input]");
+  const Password__input = document.querySelector("[Password__input]");
+  const Btn__Submit = document.querySelector("[Btn__Submit]");
+  const Btn__LogOut = document.querySelector("[Btn__LogOut]");
+
+  const user__container = document.querySelector("[user__container]");
+  const form__Container = document.querySelector("[form__Container]");
+
+  const err__text__wrapper = document.querySelector("[err__text__wrapper]");
+  const err__text = document.querySelector("[err__text]");
+
+  Btn__Submit.addEventListener('click', Valid__Input);
+  Btn__LogOut.addEventListener('click', Login__User);
+
+  let User__Arr = JSON.parse(localStorage.getItem("User")) || [];
+
+  function Valid__Input() {
+    let Email__Value = Email__Input.value;
+    let Password__Value = Password__input.value;
+
+    if (Email__Value != "" && Password__Value != "") {
+      if (Password__Value.length >= 8) {
+        Check__User(Email__Value, Password__Value);
+      } else {
+        Show__Error("Password should be minimum 8 characters!", 2000);
+      }
+    } else {
+      Show__Error("Email or password are empty!", 2000);
+    }
+  }
+
+  function Check__User(email, pass) {
+    if (User__Arr != "") {
+      let new__arr = User__Arr.filter(i => i.Email == email && i.Password == pass);
+      if (new__arr != "") {
+        Login__User();
+        Email__Input.value = "";
+        Password__input.value = "";
+      } else {
+        Show__Error("User not found!", 2000);
+      }
+    }
+  }
+
+  function Login__User() {
+    user__container.classList.toggle('active');
+    if (user__container.classList.contains('active')) {
+      localStorage.setItem("Logged", "true");
+      form__Container.classList.remove('active');
+      user__container.classList.add('active');
+    } else {
+      localStorage.setItem("Logged", "felse");
+      form__Container.classList.add('active');
+      user__container.classList.remove('active');
+    }
+  }
+
+  if (localStorage.getItem("Logged") == "true") {
+    Login__User();
+  }
+
+  function Show__Error(err, duration) {
+    err__text__wrapper.classList.add("active");
+    err__text.innerText = err;
+    setTimeout(() => {
+      err__text__wrapper.classList.remove("active");
+    }, duration);
+  }
+</script>
+
+</html>

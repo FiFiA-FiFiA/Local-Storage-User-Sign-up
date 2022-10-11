@@ -23,6 +23,7 @@
         <input class="input" type="email" placeholder="example@gmail.com" required Email__Input>
         <input class="input" type="password" placeholder="password" required Password__input>
         <input class="input" type="password" placeholder="Confirm password" required Confirm__Password__input>
+        <input class="input" type="text" placeholder="Unique Word" required Unique__Word__input>
         <button type="button" class="btn" Btn__Continue>Continue</button>
         <p>Already have an account? <a href="./index_2.html">Login</a></p>
       </form>
@@ -34,15 +35,17 @@
 
 <script>
   class user {
-    constructor(Email, Password) {
+    constructor(Email, Password, UniqueWord) {
       this.Email = Email;
       this.Password = Password;
+      this.UniqueWord = UniqueWord;
     }
   }
 
   const Email__Input = document.querySelector("[Email__Input]");
   const Password__input = document.querySelector("[Password__input]");
   const Confirm__Password__input = document.querySelector("[Confirm__Password__input]");
+  const Unique__Word__input = document.querySelector("[Unique__Word__input]");
   const Btn__Continue = document.querySelector("[Btn__Continue]");
   const Delete__Users = document.querySelector("[Delete__Users]");
 
@@ -64,12 +67,17 @@
     let Email__Value = Email__Input.value;
     let Password__Value = Password__input.value;
     let Confirm__Password__Value = Confirm__Password__input.value;
+    let Unique__Word__Value = Unique__Word__input.value;
 
     if (Email__Value != "") {
       if (Password__Value != "" && Confirm__Password__Value != "") {
         if (Password__Value.length >= 8 && Confirm__Password__Value.length >= 8) {
-          if (Password__Value == Confirm__Password__Value) {
-            Check__User(Email__Value, Password__Value);
+          if (Password__Value == Confirm__Password__Value && Password__Value.toLowerCase() != Confirm__Password__Value) {
+            if (Unique__Word__Value != "") {
+              Check__User(Email__Value, Password__Value, Unique__Word__Value);
+            } else {
+              Show__Error("Unique Word can't be empty!", 2000);
+            }
           } else {
             Show__Error("Password not Matched!", 2000);
           }
@@ -84,7 +92,7 @@
     }
   }
 
-  function Check__User(email, pass) {
+  function Check__User(email, pass, Unque) {
     if (User__Arr != "") {
       let new__arr = User__Arr.filter(i => i.Email == email);
       if (new__arr != "") {
@@ -92,25 +100,26 @@
           if (arr.Email == email) {
             Show__Error("User already exists", 2000);
           } else {
-            SignUp__User(email, pass);
+            SignUp__User(email, pass, Unque);
             Show__Error("User is registred", 2000);
           }
         }
       } else {
-        SignUp__User(email, pass);
+        SignUp__User(email, pass, Unque);
         Show__Error("User is registred", 2000);
       }
     } else {
-      SignUp__User(email, pass);
+      SignUp__User(email, pass, Unque);
     }
   }
 
-  function SignUp__User(email, pass) {
+  function SignUp__User(email, pass, Unque) {
     Email__Input.value = "";
     Password__input.value = "";
     Confirm__Password__input.value = "";
+    Unique__Word__input.value = "";
 
-    User__Arr.push(new user(email, pass));
+    User__Arr.push(new user(email, pass, Unque));
     localStorage.setItem("User", JSON.stringify(User__Arr));
   }
 

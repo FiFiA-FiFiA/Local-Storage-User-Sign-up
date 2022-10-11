@@ -98,6 +98,10 @@
 
   let User__Arr = JSON.parse(localStorage.getItem("User")) || [];
 
+  if (localStorage.getItem("Logged") == "true") {
+    Login__User();
+  }
+
   function Valid__Input() {
     let Email__Value = Email__Input.value;
     let Password__Value = Password__input.value;
@@ -137,10 +141,6 @@
       form__Container.classList.add('active');
       user__container.classList.remove('active');
     }
-  }
-
-  if (localStorage.getItem("Logged") == "true") {
-    Login__User();
   }
 
   function Opan__ResetPassword__Container() {
